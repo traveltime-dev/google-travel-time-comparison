@@ -118,5 +118,14 @@ The output file will contain the `origin` and `destination` columns from input f
   - `absolute_error`: absolute error between Google and TravelTime travel times in seconds
   - `relative_error`: relative error between Google and TravelTime travel times in percent, relative to Google result.
 
+### Sample output
+```csv
+origin,destination,departure_time,google_time,google_distance,traveltime_time,traveltime_distance,absolute_error,relative_error
+"52.18328265122799, 0.12210601890895814","52.21895534832237, 0.14567620275439855",07:00:00,663.0,5501.0,1112.0,5414.0,449.0,67.72247360482655
+"52.18328265122799, 0.12210601890895814","52.21895534832237, 0.14567620275439855",10:00:00,798.0,5501.0,943.0,5414.0,145.0,18.170426065162907
+"52.18328265122799, 0.12210601890895814","52.21895534832237, 0.14567620275439855",13:00:00,818.0,5501.0,943.0,5414.0,125.0,15.28117359413203
+...
+```
+
 ## License
 This project is licensed under MIT License. For more details, see the LICENSE file.
