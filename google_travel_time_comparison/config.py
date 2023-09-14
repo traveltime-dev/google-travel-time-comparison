@@ -34,13 +34,13 @@ def parse_args():
     parser.add_argument("--mode", default=Mode.DRIVING.value, type=str,
                         help="Mode of transport ('driving' or 'public_transport')", choices=[e.value for e in Mode])
     parser.add_argument("--interval", required=True, type=int, help="Interval in minutes")
-    parser.add_argument("--time-zone-id", required=True, help="Time zone ID")
+    parser.add_argument("--time-zone-id", required=True, help="Non-abbreviated time zone identifier e.g. Europe/London")
     parser.add_argument("--google-max-rpm", required=False, type=int, default=DEFAULT_GOOGLE_RPM,
                         help="Maximum number of requests sent to Google API per minute")
     parser.add_argument("--traveltime-max-rpm", required=False, type=int, default=DEFAULT_TRAVELTIME_RPM,
                         help="Maximum number of requests sent to TravelTime API per minute")
     parser.add_argument("--skip-data-gathering", action=argparse.BooleanOptionalAction,
-                        help="If set, reads already gathered data from input file and skips data gathering. Input file must conform the output file format.")
+                        help="If set, reads already gathered data from input file and skips data gathering. Input file must conform to the output file format.")
     return parser.parse_args()
 
 

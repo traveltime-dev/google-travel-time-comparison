@@ -58,7 +58,7 @@ def wrap_result(origin: str, destination: str, travel_time: int, distance: int, 
     return {
         Fields.ORIGIN: origin,
         Fields.DESTINATION: destination,
-        Fields.DEPARTURE_TIME: departure_time.strftime("%H:%M:%S"),
+        Fields.DEPARTURE_TIME: departure_time.strftime("%Y-%m-%d %H:%M:%S%z"),
         Fields.TRAVEL_TIME[api]: travel_time,
         Fields.DISTANCE[api]: distance
     }

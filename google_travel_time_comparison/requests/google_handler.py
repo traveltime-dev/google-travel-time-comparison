@@ -60,4 +60,4 @@ def get_google_specific_mode(mode: Mode) -> str:
     elif mode == Mode.PUBLIC_TRANSPORT:
         return "transit"
     else:
-        raise ValueError(f"Unsupported mode: {mode}")
+        raise ValueError(f"Unsupported mode: `{mode.value}`")

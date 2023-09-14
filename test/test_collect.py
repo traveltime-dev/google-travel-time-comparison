@@ -43,18 +43,15 @@ def test_generate_time_instants_with_end_time_before_start_raises_error():
 
 
 def test_parse_coordinates_simple_case():
-    coord_str = "51.4614, -0.1120"
-    result = parse_coordinates(coord_str)
-    assert isinstance(result, Coordinates)
-    assert result.lat == 51.4614
-    assert result.lng == -0.1120
+    coord_str = "51.4614,-0.1120"
+    assert parse_coordinates(coord_str) == Coordinates(lat=51.4614, lng=-0.1120)
 
 
 def test_parse_coordinates_with_spaces():
-    coord_str = "51.4614, -0.1120"
-    result = parse_coordinates(coord_str)
-    assert result.lat == 51.4614
-    assert result.lng == -0.1120
+    assert parse_coordinates("51.4614, -0.1120") == Coordinates(lat=51.4614, lng=-0.1120)
+    assert parse_coordinates("51.4614 , -0.1120") == Coordinates(lat=51.4614, lng=-0.1120)
+    assert parse_coordinates(" 51.4614 , -0.1120") == Coordinates(lat=51.4614, lng=-0.1120)
+    assert parse_coordinates(" 51.4614 , -0.1120 ") == Coordinates(lat=51.4614, lng=-0.1120)
 
 
 def test_parse_coordinates_missing_coma():

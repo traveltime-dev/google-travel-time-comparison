@@ -56,4 +56,4 @@ def get_traveltime_specific_mode(mode: Mode) -> Driving | PublicTransport:
     elif mode.value == Mode.PUBLIC_TRANSPORT.value:
         return PublicTransport()
     else:
-        raise ValueError(f"Unsupported mode {mode}")
+        raise ValueError(f"Unsupported mode `{mode.value}`")
