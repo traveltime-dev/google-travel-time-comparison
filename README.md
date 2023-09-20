@@ -33,20 +33,21 @@ Activate the virtual environment:
 source env/bin/activate
 ```
 
-Install the project dependencies:
+Install the project and its dependencies:
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Setup
-Set up environment variables for the APIs:
-For Google Maps:
+Set up environment variables for the APIs.
+
+For Google Maps API:
 
 ```bash
 export GOOGLE_API_KEY=[Your Google Maps API Key]
 ```
 
-For TravelTime:
+For TravelTime API:
 ```bash
 export TRAVELTIME_APP_ID=[Your TravelTime App ID]
 export TRAVELTIME_API_KEY=[Your TravelTime API Key]
@@ -55,9 +56,9 @@ export TRAVELTIME_API_KEY=[Your TravelTime API Key]
 ## Usage
 Run the tool:
 ```bash
-python main.py --input [Input CSV file path] --output [Output CSV file path] --date [Date (YYYY-MM-DD)] \ 
-               --start-time [Start time (HH:MM)] --end-time [End time (HH:MM)] --interval [Interval in minutes] \ 
-               --time-zone-id [Time zone ID] 
+google_travel_time_comparison --input [Input CSV file path] --output [Output CSV file path] \
+    --date [Date (YYYY-MM-DD)] --start-time [Start time (HH:MM)] --end-time [End time (HH:MM)] \
+    --interval [Interval in minutes] --time-zone-id [Time zone ID] 
 ```
 Required arguments:
 - `--input [Input CSV file path]`: Path to the input file. Input file is required to have a header row and at least one 
@@ -91,7 +92,8 @@ Optional arguments:
 Example:
 
 ```bash
-    python main.py --input uk.csv --output output.csv --date 2023-09-20 --start-time 07:00 --end-time 20:00 --interval 180 --time-zone-id "Europe/London"
+google_travel_time_comparison --input examples/uk.csv --output output.csv --date 2023-09-20 \
+    --start-time 07:00 --end-time 20:00 --interval 180 --time-zone-id "Europe/London"
 ```
 
 ## Calculating departure times
