@@ -2,7 +2,7 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import List, Dict, Union
 
 import pandas as pd
 import pytz
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 async def fetch_travel_time_and_distance(
         origin: str, destination: str, api: str, departure_time: datetime,
-        request_handler: BaseRequestHandler, mode: Mode) -> dict[str, str]:
+        request_handler: BaseRequestHandler, mode: Mode) -> Dict[str, str]:
     origin_coord = parse_coordinates(origin)
     destination_coord = parse_coordinates(destination)
 
@@ -64,7 +64,7 @@ def wrap_result(origin: str, destination: str, travel_time: int, distance: int, 
     }
 
 
-def localize_datetime(date: str, time: str, timezone: StaticTzInfo | DstTzInfo) -> datetime:
+def localize_datetime(date: str, time: str, timezone: Union[StaticTzInfo, DstTzInfo]) -> datetime:
     datetime_instance = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
     return timezone.localize(datetime_instance)
 
