@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
-async def main():
+async def run():
     args = config.parse_args()
     csv = pd.read_csv(args.input, usecols=[Fields.ORIGIN, Fields.DESTINATION]).drop_duplicates()
 
@@ -29,5 +29,9 @@ async def main():
     run_analysis(travel_times, args.output, [0.9, 0.95, 0.99])
 
 
+def main():
+    asyncio.run(run())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Tuple
+from typing import Tuple, Union
 
 from aiolimiter import AsyncLimiter
 from traveltimepy import Location, Coordinates, TravelTimeSdk, Driving, Property, PublicTransport
@@ -50,7 +50,7 @@ class RouteNotFoundError(Exception):
     pass
 
 
-def get_traveltime_specific_mode(mode: Mode) -> Driving | PublicTransport:
+def get_traveltime_specific_mode(mode: Mode) -> Union[Driving, PublicTransport]:
     if mode.value == Mode.DRIVING.value:
         return Driving()
     elif mode.value == Mode.PUBLIC_TRANSPORT.value:
