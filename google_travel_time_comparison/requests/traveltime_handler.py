@@ -3,6 +3,7 @@ from typing import Tuple, Union
 
 from aiolimiter import AsyncLimiter
 from traveltimepy import Location, Coordinates, TravelTimeSdk, Driving, Property, PublicTransport
+from traveltimepy.dto.common import SnapPenalty
 
 from google_travel_time_comparison.config import Mode
 from google_travel_time_comparison.requests.base_handler import BaseRequestHandler
@@ -36,7 +37,8 @@ class TravelTimeRequestHandler(BaseRequestHandler):
             },
             transportation=get_traveltime_specific_mode(mode),
             departure_time=departure_time,
-            properties=[Property.TRAVEL_TIME, Property.DISTANCE]
+            properties=[Property.TRAVEL_TIME, Property.DISTANCE],
+            snap_penalty=SnapPenalty.DISABLED
         )
 
         if not results or not results[0].locations or not results[0].locations[0].properties:
