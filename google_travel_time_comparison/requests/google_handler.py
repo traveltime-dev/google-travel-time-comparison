@@ -6,7 +6,7 @@ from aiolimiter import AsyncLimiter
 from traveltimepy import Coordinates
 
 from google_travel_time_comparison.config import Mode
-from google_travel_time_comparison.requests.base_handler import BaseRequestHandler
+from google_travel_time_comparison.requests.base_handler import BaseRequestHandler, RequestResult
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,8 @@ class GoogleRequestHandler(BaseRequestHandler):
     DURATION_IN_TRAFFIC = "duration_in_traffic"
     DURATION = "duration"
     GOOGLE_DIRECTIONS_URL = 'https://maps.googleapis.com/maps/api/directions/json'
+
+    default_timeout = aiohttp.ClientTimeout(total=60)
 
     def __init__(self, api_key, max_rpm):
         self.api_key = api_key
@@ -34,24 +36,27 @@ class GoogleRequestHandler(BaseRequestHandler):
             "departure_time": int(departure_time.timestamp()),
             'key': self.api_key
         }
+        try:
+           async with aiohttp.ClientSession(timeout=self.default_timeout) as session, session.get(self.GOOGLE_DIRECTIONS_URL,
+                                                                    params=params) as response:
+                data = await response.json()
 
-        async with aiohttp.ClientSession() as session, session.get(self.GOOGLE_DIRECTIONS_URL,
-                                                                   params=params) as response:
-            data = await response.json()
+                if data["status"] == "OK":
+                    route = data.get("routes", [{}])[0]
+                    leg = route.get("legs", [{}])[0]
 
-            if data["status"] == "OK":
-                route = data.get("routes", [{}])[0]
-                leg = route.get("legs", [{}])[0]
+                    if not leg:
+                        raise GoogleApiError("No route found between origin and destination.")
 
-                if not leg:
-                    raise GoogleApiError("No route found between origin and destination.")
-
-                travel_time = leg.get(self.DURATION_IN_TRAFFIC, leg.get(self.DURATION))["value"]
-                distance = leg["distance"]["value"]
-                return travel_time, distance
-            else:
-                logger.error("Error in Google API response: %s", data["status"])
-                raise GoogleApiError(data)
+                    travel_time = leg.get(self.DURATION_IN_TRAFFIC, leg.get(self.DURATION))["value"]
+                    distance = leg["distance"]["value"]
+                    return RequestResult(travel_time=travel_time, distance=distance)
+                else:
+                    logger.error("Error in Google API response: %s", data["status"])
+                    return RequestResult(None, None)
+        except Exception as e:
+            logger.error("Exception during requesting Google API, {e}")
+            return RequestResult(None, None)           
 
 
 def get_google_specific_mode(mode: Mode) -> str:

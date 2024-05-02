@@ -1,10 +1,20 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
 from datetime import datetime
 
 from aiolimiter import AsyncLimiter
 from traveltimepy import Coordinates
 
 from google_travel_time_comparison.config import Mode
+
+@dataclass
+class RequestResult:
+    travel_time: int | None
+    distance: int | None
+
+    def isValid(self) -> bool: 
+        (self.travel_time != None and self.distance != None)
 
 
 class BaseRequestHandler(ABC):
@@ -16,7 +26,7 @@ class BaseRequestHandler(ABC):
                            origin: Coordinates,
                            destination: Coordinates,
                            departure_time: datetime,
-                           mode: Mode):
+                           mode: Mode) -> RequestResult:
         pass
 
     @property

@@ -43,10 +43,10 @@ async def fetch_travel_time_and_distance(
 
     async with request_handler.rate_limiter:
         logger.debug(f"Sending request to {api} for {origin_coord}, {destination_coord}, {departure_time}")
-        travel_time, distance = await request_handler.send_request(origin_coord, destination_coord, departure_time,
+        result = await request_handler.send_request(origin_coord, destination_coord, departure_time,
                                                                    mode)
         logger.debug(f"Finished request to {api} for {origin_coord}, {destination_coord}, {departure_time}")
-        return wrap_result(origin, destination, travel_time, distance, departure_time, api)
+        return wrap_result(origin, destination, result.travel_time, result.distance, departure_time, api)
 
 
 def parse_coordinates(coord_string: str) -> Coordinates:
@@ -54,7 +54,7 @@ def parse_coordinates(coord_string: str) -> Coordinates:
     return Coordinates(lat=lat, lng=lng)
 
 
-def wrap_result(origin: str, destination: str, travel_time: int, distance: int, departure_time: datetime, api: str):
+def wrap_result(origin: str, destination: str, travel_time: int | None, distance: int | None, departure_time: datetime, api: str):
     return {
         Fields.ORIGIN: origin,
         Fields.DESTINATION: destination,
