@@ -18,6 +18,7 @@ class QuantileErrorResult:
 
 def run_analysis(results: DataFrame, output_file: str, quantiles: List[float]):
     results_with_differences = calculate_differences(results)
+    logging.info(f"Mean relative error: {results_with_differences[RELATIVE_ERROR].mean():.2f}%")
     for q in quantiles:
         quantile_errors = calculate_quantiles(results_with_differences, q)
         logging.info(
