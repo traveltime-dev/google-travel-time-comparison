@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from datetime import datetime
+from typing import Optional
 
 from aiolimiter import AsyncLimiter
 from traveltimepy import Coordinates
@@ -10,8 +11,8 @@ from google_travel_time_comparison.config import Mode
 
 @dataclass
 class RequestResult:
-    travel_time: int | None
-    distance: int | None
+    travel_time: Optional[int]
+    distance: Optional[int]
 
     def isValid(self) -> bool: 
         (self.travel_time != None and self.distance != None)

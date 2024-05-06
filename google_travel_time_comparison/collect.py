@@ -2,7 +2,7 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Optional
 
 import pandas as pd
 import pytz
@@ -54,7 +54,7 @@ def parse_coordinates(coord_string: str) -> Coordinates:
     return Coordinates(lat=lat, lng=lng)
 
 
-def wrap_result(origin: str, destination: str, travel_time: int | None, distance: int | None, departure_time: datetime, api: str):
+def wrap_result(origin: str, destination: str, travel_time: Optional[int], distance: Optional[int], departure_time: datetime, api: str):
     return {
         Fields.ORIGIN: origin,
         Fields.DESTINATION: destination,
