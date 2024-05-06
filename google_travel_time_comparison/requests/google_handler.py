@@ -40,8 +40,9 @@ class GoogleRequestHandler(BaseRequestHandler):
            async with aiohttp.ClientSession(timeout=self.default_timeout) as session, session.get(self.GOOGLE_DIRECTIONS_URL,
                                                                     params=params) as response:
                 data = await response.json()
+                status = data["status"]
 
-                if data["status"] == "OK":
+                if status == "OK":
                     route = data.get("routes", [{}])[0]
                     leg = route.get("legs", [{}])[0]
 
@@ -52,7 +53,8 @@ class GoogleRequestHandler(BaseRequestHandler):
                     distance = leg["distance"]["value"]
                     return RequestResult(travel_time=travel_time, distance=distance)
                 else:
-                    logger.error("Error in Google API response: %s", data["status"])
+                    error_message = data.get("error_message", "")
+                    logger.error(f"Error in Google API response: {status} - {error_message}")
                     return RequestResult(None, None)
         except Exception as e:
             logger.error("Exception during requesting Google API, {e}")
