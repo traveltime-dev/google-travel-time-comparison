@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Tuple, Union
 import logging
 
-
 from aiolimiter import AsyncLimiter
 from traveltimepy import Location, Coordinates, TravelTimeSdk, Driving, Property, PublicTransport
 from traveltimepy.dto.common import SnapPenalty
@@ -14,14 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 class TravelTimeRequestHandler(BaseRequestHandler):
-
     ORIGIN_ID = "o"
     DESTINATION_ID = "d"
 
     def __init__(self, app_id, api_key, max_rpm):
         self.sdk = TravelTimeSdk(app_id, api_key)
-        self._rate_limiter = AsyncLimiter(max_rpm//60, 1)
-
+        self._rate_limiter = AsyncLimiter(max_rpm // 60, 1)
 
     async def send_request(
             self,
@@ -29,7 +26,7 @@ class TravelTimeRequestHandler(BaseRequestHandler):
             destination: Coordinates,
             departure_time: datetime,
             mode: Mode
-    ) -> Tuple[int, int]:
+    ) -> RequestResult:
         locations = [
             Location(id=self.ORIGIN_ID, coords=origin),
             Location(id=self.DESTINATION_ID, coords=destination),
@@ -49,8 +46,6 @@ class TravelTimeRequestHandler(BaseRequestHandler):
         except Exception as e:
             logger.error(f"Exception during requesting TravelTime API, {e}")
             return RequestResult(None, None)
-            
-
 
         if not results or not results[0].locations or not results[0].locations[0].properties:
             return RequestResult(None, None)
