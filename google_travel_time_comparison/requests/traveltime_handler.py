@@ -20,7 +20,6 @@ class TravelTimeRequestHandler(BaseRequestHandler):
 
     def __init__(self, app_id, api_key, max_rpm):
         self.sdk = TravelTimeSdk(app_id, api_key)
-        print(f"id={app_id}, key={api_key}")
         self._rate_limiter = AsyncLimiter(max_rpm//60, 1)
 
 
