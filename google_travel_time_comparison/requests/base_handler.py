@@ -9,13 +9,11 @@ from traveltimepy import Coordinates
 
 from google_travel_time_comparison.config import Mode
 
+
 @dataclass
 class RequestResult:
     travel_time: Optional[int]
     distance: Optional[int]
-
-    def isValid(self) -> bool: 
-        (self.travel_time != None and self.distance != None)
 
 
 class BaseRequestHandler(ABC):

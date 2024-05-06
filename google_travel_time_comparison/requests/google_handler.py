@@ -24,9 +24,10 @@ class GoogleRequestHandler(BaseRequestHandler):
 
     def __init__(self, api_key, max_rpm):
         self.api_key = api_key
-        self._rate_limiter = AsyncLimiter(max_rpm//60, 1)
+        self._rate_limiter = AsyncLimiter(max_rpm // 60, 1)
 
-    async def send_request(self, origin: Coordinates, destination: Coordinates, departure_time: datetime, mode: Mode):
+    async def send_request(self, origin: Coordinates, destination: Coordinates, departure_time: datetime,
+                           mode: Mode) -> RequestResult:
 
         params = {
             'origin': "{},{}".format(origin.lat, origin.lng),
@@ -37,8 +38,9 @@ class GoogleRequestHandler(BaseRequestHandler):
             'key': self.api_key
         }
         try:
-           async with aiohttp.ClientSession(timeout=self.default_timeout) as session, session.get(self.GOOGLE_DIRECTIONS_URL,
-                                                                    params=params) as response:
+            async with aiohttp.ClientSession(timeout=self.default_timeout) as session, session.get(
+                    self.GOOGLE_DIRECTIONS_URL,
+                    params=params) as response:
                 data = await response.json()
                 status = data["status"]
 
@@ -57,8 +59,8 @@ class GoogleRequestHandler(BaseRequestHandler):
                     logger.error(f"Error in Google API response: {status} - {error_message}")
                     return RequestResult(None, None)
         except Exception as e:
-            logger.error("Exception during requesting Google API, {e}")
-            return RequestResult(None, None)           
+            logger.error(f"Exception during requesting Google API, {e}")
+            return RequestResult(None, None)
 
 
 def get_google_specific_mode(mode: Mode) -> str:
