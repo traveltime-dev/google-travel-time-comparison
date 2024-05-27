@@ -43,7 +43,7 @@ async def run():
         skipped_rows = (all_rows - filtered_rows)
         if skipped_rows > 0:
             logger.info(f"Skipped {skipped_rows} rows ({100 * skipped_rows / all_rows:.2f}%)")
-        run_analysis(filtered_travel_times_df, args.output, [0.9, 0.95, 0.99])
+        run_analysis(filtered_travel_times_df, args.output, 0.95)
 
 
 def main():

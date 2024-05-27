@@ -56,10 +56,10 @@ class GoogleRequestHandler(BaseRequestHandler):
                 else:
                     error_message = data.get("error_message", "")
                     logger.error(f"Error in Google API response: {status} - {error_message}")
-                    return RequestResult(None, None)
+                    return RequestResult(None)
         except Exception as e:
             logger.error(f"Exception during requesting Google API, {e}")
-            return RequestResult(None, None)
+            return RequestResult(None)
 
 
 def get_google_specific_mode(mode: Mode) -> str:
