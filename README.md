@@ -91,7 +91,7 @@ Optional arguments:
 Example:
 
 ```bash
-google_travel_time_comparison --input examples/uk.csv --output output.csv --date 2023-09-20 \google_travel_time
+google_travel_time_comparison --input examples/uk.csv --output output.csv --date 2023-09-20 \
     --start-time 07:00 --end-time 20:00 --interval 180 --time-zone-id "Europe/London"
 ```
 
