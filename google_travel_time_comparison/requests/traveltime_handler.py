@@ -40,7 +40,7 @@ class TravelTimeRequestHandler(BaseRequestHandler):
                 },
                 transportation=get_traveltime_specific_mode(mode),
                 departure_time=departure_time,
-                properties=[Property.TRAVEL_TIME, Property.DISTANCE],
+                properties=[Property.TRAVEL_TIME],
                 snap_penalty=SnapPenalty.DISABLED
             )
         except Exception as e:
@@ -51,7 +51,7 @@ class TravelTimeRequestHandler(BaseRequestHandler):
             return RequestResult(None, None)
 
         properties = results[0].locations[0].properties[0]
-        return RequestResult(travel_time=properties.travel_time, distance=properties.distance)
+        return RequestResult(travel_time=properties.travel_time)
 
 
 class RouteNotFoundError(Exception):

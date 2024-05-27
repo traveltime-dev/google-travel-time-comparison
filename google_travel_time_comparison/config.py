@@ -7,8 +7,8 @@ import pandas
 
 from google_travel_time_comparison.requests.traveltime_credentials import TravelTimeCredentials
 
-DEFAULT_GOOGLE_RPM = 600
-DEFAULT_TRAVELTIME_RPM = 600
+DEFAULT_GOOGLE_RPM = 60
+DEFAULT_TRAVELTIME_RPM = 60
 
 GOOGLE_API_KEY_VAR_NAME = "GOOGLE_API_KEY"
 TRAVELTIME_APP_ID_VAR_NAME = "TRAVELTIME_APP_ID"
@@ -31,8 +31,6 @@ def parse_args():
     parser.add_argument("--date", required=True, help="Date (YYYY-MM-DD)")
     parser.add_argument("--start-time", required=True, help="Start time (HH:MM)")
     parser.add_argument("--end-time", required=True, help="End time (HH:MM)")
-    parser.add_argument("--mode", default=Mode.DRIVING.value, type=str,
-                        help="Mode of transport ('driving' or 'public_transport')", choices=[e.value for e in Mode])
     parser.add_argument("--interval", required=True, type=int, help="Interval in minutes")
     parser.add_argument("--time-zone-id", required=True, help="Non-abbreviated time zone identifier e.g. Europe/London")
     parser.add_argument("--google-max-rpm", required=False, type=int, default=DEFAULT_GOOGLE_RPM,

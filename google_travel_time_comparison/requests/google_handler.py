@@ -52,8 +52,7 @@ class GoogleRequestHandler(BaseRequestHandler):
                         raise GoogleApiError("No route found between origin and destination.")
 
                     travel_time = leg.get(self.DURATION_IN_TRAFFIC, leg.get(self.DURATION))["value"]
-                    distance = leg["distance"]["value"]
-                    return RequestResult(travel_time=travel_time, distance=distance)
+                    return RequestResult(travel_time=travel_time)
                 else:
                     error_message = data.get("error_message", "")
                     logger.error(f"Error in Google API response: {status} - {error_message}")
