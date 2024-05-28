@@ -23,19 +23,15 @@ class Fields:
     DESTINATION = "destination"
     DEPARTURE_TIME = "departure_time"
     TRAVEL_TIME = {
-        GOOGLE_API: "google_time",
-        TRAVELTIME_API: "traveltime_time"
-    }
-    DISTANCE = {
-        GOOGLE_API: "google_distance",
-        TRAVELTIME_API: "traveltime_distance"
+        GOOGLE_API: "google_travel_time",
+        TRAVELTIME_API: "tt_travel_time"
     }
 
 
 logger = logging.getLogger(__name__)
 
 
-async def fetch_travel_time_and_distance(
+async def fetch_travel_time(
         origin: str, destination: str, api: str, departure_time: datetime,
         request_handler: BaseRequestHandler, mode: Mode) -> Dict[str, str]:
     origin_coord = parse_coordinates(origin)
@@ -46,7 +42,7 @@ async def fetch_travel_time_and_distance(
         result = await request_handler.send_request(origin_coord, destination_coord, departure_time,
                                                     mode)
         logger.debug(f"Finished request to {api} for {origin_coord}, {destination_coord}, {departure_time}")
-        return wrap_result(origin, destination, result.travel_time, result.distance, departure_time, api)
+        return wrap_result(origin, destination, result.travel_time, departure_time, api)
 
 
 def parse_coordinates(coord_string: str) -> Coordinates:
@@ -54,14 +50,12 @@ def parse_coordinates(coord_string: str) -> Coordinates:
     return Coordinates(lat=lat, lng=lng)
 
 
-def wrap_result(origin: str, destination: str, travel_time: Optional[int], distance: Optional[int],
-                departure_time: datetime, api: str):
+def wrap_result(origin: str, destination: str, travel_time: Optional[int], departure_time: datetime, api: str):
     return {
         Fields.ORIGIN: origin,
         Fields.DESTINATION: destination,
         Fields.DEPARTURE_TIME: departure_time.strftime("%Y-%m-%d %H:%M:%S%z"),
-        Fields.TRAVEL_TIME[api]: travel_time,
-        Fields.DISTANCE[api]: distance
+        Fields.TRAVEL_TIME[api]: travel_time
     }
 
 
@@ -76,8 +70,8 @@ def generate_tasks(data: DataFrame, time_instants: List[datetime],
     for index, row in data.iterrows():
         for time_instant in time_instants:
             for api, request_handler in request_handlers.items():
-                task = fetch_travel_time_and_distance(row[Fields.ORIGIN], row[Fields.DESTINATION], api, time_instant,
-                                                      request_handler, mode=mode)
+                task = fetch_travel_time(row[Fields.ORIGIN], row[Fields.DESTINATION], api, time_instant,
+                                         request_handler, mode=mode)
                 tasks.append(task)
     return tasks
 
@@ -89,7 +83,7 @@ async def collect_travel_times(args, data, request_handlers: Dict[str, BaseReque
     time_instants = generate_time_instants(localized_start_datetime, localized_end_datetime,
                                            args.interval)
 
-    tasks = generate_tasks(data, time_instants, request_handlers, mode=Mode(args.mode))
+    tasks = generate_tasks(data, time_instants, request_handlers, mode=Mode.DRIVING)
 
     logger.info(
         f"Sending {len(tasks)} requests to Google and TravelTime APIs")
@@ -100,9 +94,7 @@ async def collect_travel_times(args, data, request_handlers: Dict[str, BaseReque
     deduplicated = results_df.groupby([Fields.ORIGIN, Fields.DESTINATION, Fields.DEPARTURE_TIME], as_index=False).agg(
         {
             Fields.TRAVEL_TIME[GOOGLE_API]: 'first',
-            Fields.DISTANCE[GOOGLE_API]: 'first',
-            Fields.TRAVEL_TIME[TRAVELTIME_API]: 'first',
-            Fields.DISTANCE[TRAVELTIME_API]: 'first'
+            Fields.TRAVEL_TIME[TRAVELTIME_API]: 'first'
         }
     )
     deduplicated.to_csv(args.output, index=False)

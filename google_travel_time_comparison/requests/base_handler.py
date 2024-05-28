@@ -13,7 +13,6 @@ from google_travel_time_comparison.config import Mode
 @dataclass
 class RequestResult:
     travel_time: Optional[int]
-    distance: Optional[int]
 
 
 class BaseRequestHandler(ABC):

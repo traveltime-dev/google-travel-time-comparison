@@ -7,7 +7,7 @@ from pandas import DataFrame
 from google_travel_time_comparison.collect import Fields, GOOGLE_API, TRAVELTIME_API
 
 ABSOLUTE_ERROR = "absolute_error"
-RELATIVE_ERROR = "relative_error"
+RELATIVE_ERROR = "error_percentage"
 
 
 @dataclass
@@ -16,15 +16,17 @@ class QuantileErrorResult:
     relative_error: int
 
 
-def run_analysis(results: DataFrame, output_file: str, quantiles: List[float]):
+def run_analysis(results: DataFrame, output_file: str, quantile: float):
     results_with_differences = calculate_differences(results)
     logging.info(f"Mean relative error: {results_with_differences[RELATIVE_ERROR].mean():.2f}%")
-    for q in quantiles:
-        quantile_errors = calculate_quantiles(results_with_differences, q)
-        logging.info(
-            f"{int(q * 100)}% of TravelTime results differ from Google API by less than {int(quantile_errors.absolute_error)}s / {int(quantile_errors.relative_error)}%")
+    quantile_errors = calculate_quantiles(results_with_differences, quantile)
+    logging.info(
+        f"{int(quantile * 100)}% of TravelTime results differ from Google API by less than {int(quantile_errors.relative_error)}%")
 
     logging.info(f"Detailed results can be found in {output_file} file")
+
+    results_with_differences = results_with_differences.drop(columns=[ABSOLUTE_ERROR])
+    results_with_differences[RELATIVE_ERROR] = results_with_differences[RELATIVE_ERROR].astype(int)
 
     results_with_differences.to_csv(output_file, index=False)
 
@@ -33,6 +35,7 @@ def calculate_differences(results: DataFrame) -> DataFrame:
     results_with_differences = results.assign(**{
         ABSOLUTE_ERROR: abs(results[Fields.TRAVEL_TIME[GOOGLE_API]] - results[Fields.TRAVEL_TIME[TRAVELTIME_API]])
     })
+
     results_with_differences[RELATIVE_ERROR] = (
             results_with_differences[ABSOLUTE_ERROR] / results_with_differences[Fields.TRAVEL_TIME[GOOGLE_API]] * 100
     )
