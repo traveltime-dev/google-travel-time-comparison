@@ -113,8 +113,7 @@ The output file will contain the `origin` and `destination` columns from input f
     It includes date, time and timezone offset.
   - `google_travel_time`: travel time gathered from Google Directions API in seconds
   - `tt_travel_time`: travel time gathered from TravelTime API in seconds
-  - `absolute_error`: absolute error between Google and TravelTime travel times in seconds
-  - `relative_error`: relative error between Google and TravelTime travel times in percent, relative to Google result.
+  - `error_percentage`: relative error between Google and TravelTime travel times in percent, relative to Google result.
 
 ### Sample output
 ```csv
