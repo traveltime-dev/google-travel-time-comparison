@@ -9,7 +9,7 @@ and [TravelTime Routes API](https://docs.traveltime.com/api/reference/routes).
 - Fetch travel times from Google Maps and TravelTime in parallel, for provided origin/destination pairs and a set 
     of departure times.
 - Departure times are calculated based on user provided start time, end time and interval.  
-- Analyze the differences between the results and print out the 90%, 95% and 99% percentiles of worst absolute and relative errors.
+- Analyze the differences between the results and print out the average error percentage.
 
 ## Prerequisites
 
@@ -108,7 +108,7 @@ the 95% percentile absolute error is 250 seconds, it means that among all the ga
 TravelTime API is further apart from the equivalent Google API result than 250s. 
 
 You can also check the output file for the detailed results. 
-The output file will contain the `origin` and `destination` columns from input file, with additional 7 columns: 
+The output file will contain the `origin` and `destination` columns from input file, with additional 4 columns: 
   - `departure_time`: departure time in `YYYY-MM-DD HH:MM:SS±HHMM` format, calculated from the start-time, end-time and interval.
     It includes date, time and timezone offset.
   - `google_travel_time`: travel time gathered from Google Directions API in seconds
