@@ -65,7 +65,7 @@ Required arguments:
     row with data, with two columns: `origin` and `destination`.
     The values in the columns must be latitude and longitude pairs, separated 
     by comma and enclosed in double quotes. For example: `"51.5074,-0.1278"`. Columns must be separated by comma as well.
-    Look at the `examples` directory for examples. 
+    Look at the `examples` directory for examples. You can find more pre-prepared routes in the `inputs` directory.
 - `--output [Output CSV file path]`: Path to the output file. It will contain the gathered travel times. 
   See the details in the [Output section](#output)
 - `--date [Date (YYYY-MM-DD)]`: date on which the travel times are gathered. Use a future date, as Google API returns
